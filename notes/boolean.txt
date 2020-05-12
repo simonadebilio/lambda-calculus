@@ -1,0 +1,37 @@
+
+IF NOT(A>0 AND A<10) THEN [!(P AND Q)]
+
+A>0 (P)	A<10 (Q)	
+T	T	F
+F	T	T
+T	F	T
+F	F	T
+
+
+IF (A<=0 AND A>=10) THEN [(!P AND !Q)]
+
+A<=0 (!P)	A>=10 (!Q)	
+T		T		T* (A cannot be both A<=0 and A>=10)
+F		T		F
+T		F		F
+F		F		F
+
+
+
+`0` = I = \z.z
+`n+1`= [false, `n`] = [K*, `n`] = [\xy.y, `n`] = \x.x (\xy.y)`n`
+
+Zero = \x.x true = \x.x K = \x.x (\xy.x)
+
+Zero `0`= (\x.x (\xy.x))(\z.z) =
+= (\z.z) (\xy.x) = \xy.x = K = true
+
+`1` = \x.x (\xy.y)(\z.z) = \x.x (\y.y)
+
+Zero `1` = (\x.x (\xy.x))(\z.z (\w.w)) =
+= (\z.z (\w.w)) (\xy.x) =
+= (\xy.x) (\w.w) =
+= (\y.(\w.w)) = \yw.w = K* = false
+
+
+

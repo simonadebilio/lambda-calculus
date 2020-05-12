@@ -1,0 +1,1120 @@
+\documentclass[11pt]{article}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{bussproofs}
+\usepackage{latexsym}
+\usepackage{tipa}
+\usepackage{verbatim}
+
+\def\fCenter{{\mbox{\Large$\rightarrow$}}}
+\EnableBpAbbreviations
+
+
+\title{\textbf{Lambda Calculus}}
+\author{Luca Violanti\\
+		Simona Debilio}
+\date{2020-04-01}
+\begin{document}
+
+\maketitle
+
+\section*{Church numerals}
+
+\begin{gather*}
+F^{0} (M) \equiv M \\
+F^{n+1}(M) \equiv F(F^{n}(M)) \\
+c_{n} \equiv \lambda fx.f^{n}(x)
+\end{gather*}
+
+\section*{Proposition (J.B. Rosser)}
+\begin{gather*}
+\mathbf{A_{+}} \equiv \lambda xypq.xp(ypq) \\
+\mathbf{A_{*}} \equiv \lambda xyz.x(yz) \\
+\mathbf{A_{exp}} \equiv \lambda xy.yx
+\end{gather*}
+
+\subsection*{Example 1}
+\begin{gather*}
+\mathbf{A_{+}} c_{0} c_{0} = ((\lambda xypq.xp(ypq)) (\lambda fs.s)) (\lambda gt.t) = \\
+= ((\lambda ypq.(\lambda fs.s)p(ypq)) (\lambda gt.t) = \\
+= ((\lambda ypq.((\lambda fs.s)p)(ypq)) (\lambda gt.t) = \\
+= (\lambda ypq. (\lambda s.s) (ypq)) (\lambda gt.t) = \\
+= (\lambda ypq. ypq) (\lambda gt.t) = \\
+= \lambda pq. ((\lambda gt.t)p)q = \\
+= \lambda pq. (\lambda t.t)q = \\
+= \lambda pq. q = c_0
+\end{gather*}
+
+
+\subsection*{Example 2}
+\begin{gather*}
+\mathbf{A_{+}} c_{1}c_{1} = ((\lambda xypq.xp(ypq)) (\lambda fs.fs)) (\lambda gt.gt) = \\
+= (\lambda ypq.((\lambda fs.fs)p)(ypq)) (\lambda gt.gt) = \\
+= (\lambda ypq.((\lambda s.ps)(ypq))) (\lambda gt.gt) = \\
+= (\lambda ypq.pypq) (\lambda gt.gt) = \\
+= (\lambda pq.p (\lambda gt.gt)p)q = \\
+= (\lambda pq.p (\lambda t.pt)q = \\
+= \lambda pq.ppq 
+\end{gather*}
+
+
+\subsection*{Example 3}
+\begin{gather*}
+\mathbf{A_{exp}} c_{2}c_{2} = \lambda xy.yx (\lambda fs.f(fs)) (\lambda gt.g(gt)) = \\
+= (\lambda y.y (\lambda fs.f(fs))) (\lambda gt.g(gt)) = \\
+= \lambda fs.f(fs) (\lambda gt.g(gt)) = \\
+= \lambda s. (\lambda gt.g(gt)) ((\lambda gt.g(gt))s) = \\
+= \lambda s. (\lambda gt.g(gt)) (\lambda t.s(st)) = \\
+= \lambda s. (\lambda t. (\lambda t.s(st)) (s(st)) = \\
+= \lambda s. \lambda t. (s(s (s(st)))) = \\
+\end{gather*}
+
+\subsection*{Example 3bis}
+\begin{gather*}
+\mathbf{A_{exp}} c_{2}c_{2} = \lambda xy.yx (\lambda fs.f(fs)) (\lambda gt.g(gt)) = \\
+= (\lambda y.y (\lambda fs.f(fs))) (\lambda gt.g(gt)) = \\
+= (\lambda gt.g(gt)) (\lambda fs.f(fs)) = \\
+= \lambda t. (\lambda fs.f(fs) (\lambda fs.f(fs)t)) = \\
+= \lambda t. (\lambda fs.f(fs) (\lambda s.t(ts))) = \\
+= \lambda t. (\lambda s. (\lambda s.t(ts) (\lambda s.t(ts)s))) = \\
+= \lambda t. (\lambda s. (\lambda s.t(ts) (t(ts))) = \\
+= \lambda t. \lambda s.t(t(t(ts)))
+\end{gather*}
+
+
+\section*{Chapter 2 Barendregt}
+\subsection*{Exercise 2.1}
+\subsubsection*{i) Rewrite according to official syntax:}
+
+\begin{gather*}
+M_{1} \equiv y (\lambda x.xy (\lambda zw.yz)) \\
+M_{1} \equiv (v ((\lambda v'(v'v)) (\lambda v''(\lambda v'''(vv'')))))
+\end{gather*}
+
+
+\subsubsection*{ii) Rewrite according to the simplified syntax:}
+
+\begin{gather*}
+M_{2} \equiv \lambda v' (\lambda v''((((\lambda vv) v')v'')((v''(\lambda v'''(v'v''')))v''))) \\
+M_{2} \equiv \lambda xy. ((\lambda z.z) xy)(y(\lambda p.xp)y)
+\end{gather*}
+
+
+\subsection*{$\beta$ reduction}
+\[
+(\lambda x.M)N = M [x:=N]
+\]
+
+\subsection*{Exercise 2.2}
+ Prove the following sobstitution lemma. Let $x \not\equiv y$ and $x \not\in FV(L)$. Then:
+ 
+\[
+M[x:=N][y:=L]\equiv M [y:=L][x:=N[y:=L]]
+\]
+by $\beta$ reduction
+
+\begin{gather*}
+((\lambda x.M)N)[y:=L]\equiv ((\lambda y.M)L)[x:=N[y:=L]] \\
+\lambda y.((\lambda x.M)N)L\equiv ((\lambda y.M)L)
+[x:=(\lambda y.N)L] \\
+\lambda y.((\lambda x.M)N)L\equiv \lambda x. ((\lambda y.M)L)((\lambda y.N)L) \\
+\end{gather*}
+
+
+\subsection*{Lemma 2.9}
+\[
+\lambda \vdash (\lambda x_{1} \cdots x_{n}.M)X_{1} \cdots X_{n} = M [x_{1}:=X_{1}] \cdots [x_{n} := X_{n}]
+\]
+
+\begin{gather*}
+M[x:=N][y:=L]\equiv M [y:=L][x:=N[y:=L]] \\
+M[x:=N][y:=L]\equiv M [y:=L][x:=(\lambda y.N)L] \\
+((\lambda xy.M)N)L\equiv ((\lambda yx.M)L)(\lambda y.N)L)
+\end{gather*}
+
+\subsection*{Exercise 2.5}
+Let $\mathbf{B} \equiv \lambda xyz.x(yz)$. Simplify $M \equiv \mathbf{B}XYZ$, that is find a 'simple' term N such that $\lambda \vdash M = N$
+
+\begin{gather*}
+M = (\lambda xyz.x(yz))XYZ = \\
+= (\lambda yz.X(yz))YZ = \\
+= (\lambda z.X(Yz))Z = \\
+= X(YZ)
+\end{gather*}
+
+
+\subsection*{Exercise 2.6}
+Simplify the following terms
+
+\subsubsection*{i)}
+\begin{gather*}
+M \equiv (\lambda xyz.zyx)aa(\lambda pq.q) = \\
+= (\lambda yz.zya)a(\lambda pq.q) = \\
+= (\lambda z.zaa)(\lambda pq.q) = \\
+= (\lambda pq.q)aa = \\
+= (\lambda q.q)a = \\
+= a
+\end{gather*}
+
+
+\clearpage
+\subsubsection*{ii)}
+\[
+M \equiv ((\lambda yz.zy)((\lambda x.xxx)(\lambda x.xxx)))(\lambda w. \mathbf{i)}) =
+\]
+
+
+%M = AB
+%	A = CD
+%		C = \ y . E
+%			E = \ z . H
+%				H = MN
+%					M = z
+%					N = y				
+%		D = FG
+%			F = \ x . J
+%				J = OP
+%					O = ST
+%						S = x
+%						T = x
+%					P = x
+%				
+%			G = \ x . K
+%				K = QR
+%					Q = UV
+%						U = x
+%						V = x
+%					R = x
+%	B = \ w.I
+%		I = \ p . L
+%			L = p
+		
+let $D = (\lambda x.xxx)(\lambda x.xxx)$
+
+\begin{gather*}
+ = (\lambda yz.zy)D(\lambda w.I) = \\
+= (\lambda z.zD)(\lambda w.I) = \\
+= (\lambda w. I)D = \\
+= I
+\end{gather*}
+
+
+\subsubsection*{iii)}
+$\mathbf{S} = \lambda xyz.xz(yz)$
+
+$\mathbf{K} = \lambda xy.x$
+
+\begin{gather*}
+M \equiv \mathbf{SKSKSK} = \\
+= ((((SK)S)K)S)K = \\
+= (((((\lambda xyz.xz(yz))(\lambda xy.x))S)K)S)K = \\
+= (((((\lambda yz.(\lambda xy.x)z(yz)))S)K)S)K = \\
+= (((((\lambda yz.(\lambda y.z)(yz)))S)K)S)K = \\
+= ((((\lambda yz.z)S)K)S)K = \\
+= (((\lambda z.z)K)S)K = \\
+= (KS)K = \\
+= S
+\end{gather*}
+
+\subsection*{Exercise 2.7}
+\subsubsection*{i) {\boldmath $\mathsf{\lambda \vdash KI = K_*}$}}
+
+\[
+(\lambda xy.x)(\lambda z.z) = \lambda pq.q
+\]
+\[
+\lambda yz.z = \lambda pq.q
+\]
+
+
+\subsubsection*{ii) {\boldmath $\mathsf{\lambda \vdash SKK = i)}$}}
+
+\[
+(\lambda xyz.xz(yz)) (\lambda xy.x) (\lambda xy.x) = I
+\]
+\[
+(\lambda yz. (\lambda xy.x)z(yz)) (\lambda xy.x) = I
+\]
+\[
+(\lambda yz. (\lambda y.z)(yz)) (\lambda xy.x) = I
+\]
+\[
+(\lambda yz.z) (\lambda xy.x) = I
+\]
+\[
+\lambda z.z = I
+\]
+
+\subsection*{Exercise 2.8}
+
+\subsubsection*{i)}
+Write down a closed $\lambda$-term $F \in \Lambda$ such that for all $M,N \in \Lambda$
+
+ 
+\[
+FMN = M(NM)N
+\]
+\[
+F = \lambda xy. x(yx)y
+\]
+
+\subsubsection*{ii)}
+Construct a $\lambda$-term $F \in \Lambda$ such that for all $M, N, L \in \Lambda ^o$
+
+\[
+FMNL = N(\lambda x.M)(\lambda yz.yLM)
+\]
+\[
+F = \lambda abc. b(\lambda x.a) (\lambda yz.yca)
+\]
+
+
+\subsection*{Exercise 2.9}
+Find closed terms $F$ such that
+\subsubsection*{i)}
+
+\[
+Fx = x \mathbf{i)}
+\]
+\[
+F = \lambda x. x \mathbf{i)}
+\]
+
+\subsubsection*{ii)}
+\[
+F xy = x \mathbf{i)} y
+\]
+\[
+F = \lambda xy. x \mathbf{i)} y
+\]
+
+
+\subsection*{Exercise 2.10}
+Find closed terms $F$ such that
+
+\subsubsection*{i)}
+\[
+F x = F
+\]
+
+\[
+F = \lambda x. F
+\]
+
+
+\subsubsection*{ii)}
+\[
+F x = x F
+\]
+\[
+F = \lambda x. xF
+\]
+
+\subsubsection*{iii)}
+\[
+FIKK = FK
+\]
+\[
+F = \lambda xyz.Fz
+\]
+
+
+\subsection*{Exercise 1.28}
+\subsubsection*{a}
+\[
+(\lambda x.xy) (\lambda u.vuu) =
+\]
+\[
+= (\lambda u.vuu)y =
+\]
+\[
+= vyy
+\]
+
+
+\subsubsection*{b}
+\[
+(\lambda xy.yx)uv =
+\]
+\[
+(\lambda y.yu)v =
+\]
+\[
+vu =
+\]
+
+
+\subsubsection*{c}
+\[
+(\lambda x.x(x(yz))x)(\lambda u.uv) =
+\]
+\[
+= ((\lambda u.uv)((\lambda u.uv)(yz))(\lambda u.uv)) =
+\]
+\[
+= ((\lambda u.uv)(yzv)(\lambda u.uv)) =
+\]
+\[
+= (yzvv)(\lambda u.uv)
+\]
+
+
+\subsubsection*{d}
+\[
+(\lambda x.xxy)(\lambda y.yz) =
+\]
+\[
+= ((\lambda y.yz)(\lambda y.yz)y) =
+\]
+\[
+= ((\lambda y.yz)z)y =
+\]
+\[
+= zzy
+\]
+
+
+
+\subsubsection*{e}
+\[
+(\lambda xy.xyy)(\lambda u.uwz) =
+\]
+\[
+= \lambda y.((\lambda u.uwz)yy) =
+\]
+\[
+= \lambda y.ywzy
+\]
+
+
+
+\subsubsection*{f}
+\[
+(\lambda xyz.xz(yz))((\lambda xy.yx)u)((\lambda xy.yx)v)w =
+\]
+\[
+= (\lambda xyz.xz(yz)) (\lambda y.yu) (\lambda y.yv) w =
+\]
+\[
+= (\lambda yz.((\lambda y.yu)z)(yz)) (\lambda y.yv) w =
+\]
+\[
+= (\lambda yz.zu(yz)) (\lambda y.yv) w =
+\]
+\[
+= (\lambda z.zu((\lambda y.yv)z)) w =
+\]
+\[
+= (\lambda z.zu(zv)) w =
+\]
+\[
+= wuwv
+\]
+
+
+
+
+$\mathbb{LUCA}$\\
+$\mathbb{SIMONA FALS}$
+
+\section*{The power of Lambda}
+
+\subsection*{Definition}
+\subsubsection*{i)}
+
+\begin{center}$\mathbf{true \equiv K}$ \\
+$\mathbf{false \equiv K_*}$\end{center}
+
+\subsubsection*{ii)}
+if B is considered as a Boolean, i.e. a term that is either $\mathbf{true}$ or $\mathbf{false}$, then
+
+\begin{center}\emph{if B then P else Q}\end{center}
+
+can be represented by 
+
+\begin{center}\emph{BPQ}\end{center}
+
+\subsection*{Definition (Pairing)}
+For $M,N \in \Lambda$ write
+
+\begin{center}$[M, N] \equiv \lambda z.$ if z then M else N \\
+($\equiv \lambda z.zMN$)
+\end{center}
+
+Then
+
+\begin{center}$[M, N] \mathbf{true} = M$ \\
+$[M, N] \mathbf{false} = N$\end{center}
+
+and hence [M, N] can serve as an ordered pair.
+
+\subsection*{Definition}
+
+For each $n \in \mathbb{N}$, the numeral $`n`$ is defined inductively as follows.
+
+\begin{center}
+$`0` \equiv I = \lambda z.z$
+\end{center}
+
+
+\begin{center}$`n+1` \equiv [\mathbf{false}, `n`]$ = \\
+= $[\mathbf{K_*}, `n`] $ = \\
+= $ [\lambda xy. y, `n`]$ = \\
+= $\lambda z.z (\lambda xy. y) `n`$
+\end{center}
+
+
+\subsection*{Successor, predecessor, test for zero}
+
+\begin{center}\begin{tabular}{l l l}
+$\mathbf{S}^+ `n`$ & = & $`n+1`$ \\
+$\mathbf{P}^- `n+1`$ & = & $`n`$ \\
+$\mathbf{Zero}`0`$ & = & $\mathbf{true}$ \\
+$\mathbf{Zero`n+1`}$ & = & $\mathbf{false}$ \\
+\end{tabular}\end{center}
+
+\subsubsection*{Proof}
+
+\begin{center}$\mathbf{Zero} = \lambda x.x \mathbf{true}$ = \\
+$ = \lambda x.x K$ = \\
+$ = \lambda x.x (\lambda xy.x) $\end{center}
+
+
+\begin{center}$ \mathbf{Zero} `0` = (\lambda x.x (\lambda xy.x)) (\lambda z.z)$ = \\
+= ($\lambda z.z) (\lambda xy.x) $ = \\
+= $ \lambda xy.x $ = K = true\end{center}
+
+\begin{center}
+$\mathbf{`1`} = \lambda w.w (\lambda xy.y)(\lambda z.z)$ = \\
+= $\lambda x.x (\lambda y.y)$ 
+\end{center}
+
+\begin{center}
+$Zero `1` = (\lambda x.x (\lambda xy.x)) (\lambda z.z (\lambda w.w))$ = \\
+= $(\lambda z.z (\lambda w.w))(\lambda xy.x))$ = \\
+= $(\lambda xy.x) (\lambda w.w)$ = \\
+= $(\lambda y. (\lambda w.w)) $ = \\
+= $(\lambda yw.w)) = K_* = false $
+\end{center}
+
+\clearpage
+\section*{Introduction to Boolean Logic}
+https://www.i-programmer.info/babbages-bag/235-logic-logic-everything-is-logic.html?start=2 \\
+
+IF NOT(A$>$0 AND A$<$10) THEN [!(P AND Q)]
+
+\begin{center}\begin{tabular}{l l l}
+$A>0$ (P) & $A<10$ (Q) & \\
+T & T & F \\
+F & T & T \\
+T & F & T \\
+F & F & T
+\end{tabular}\end{center}
+
+IF (A$\le$0 AND A$\ge$10) THEN [(!P AND !Q)]
+
+\begin{center}\begin{tabular}{l l l}
+A$\le$0 (!P) & A$\ge$10 (!Q) & \\
+T & T & T* \\
+F & T & F \\
+T & F & F \\
+F & F & F
+\end{tabular}\end{center}
+
+* A cannot be both A$\le$0 and A$\ge$10
+
+\subsection*{Exercise}
+\begin{gather*}
+false = K_* = \lambda xy.y\\
+[M,N] = \lambda w.wMN\\
+\\
+'0' = I = \lambda z.z\\
+'n+1' = [false, 'n'] = \lambda w.w K_* 'n' =\\
+= \lambda w.w (\lambda xy.y)'n' =\\
+= \lambda w.w (\lambda y.y)\\
+\\
+'n' = [false,'n-1'] \quad \forall n>0 = \\
+= \lambda w.w K_* 'n-1' = \\
+= \lambda w.w (\lambda xy.y) 'n-1' = \\
+= \lambda w.w (\lambda y.y)\\
+\\
+'2' = [false,'2-1'] = [false,'1'] = \\
+= [false, [false, '1-1']] = [false, [false, '0']] = \\
+= [false, [false, I]] = \dots
+\\
+\end{gather*}
+
+\subsection*{Execise for Y combinator}
+\[
+loop = (\lambda x.xx) (\lambda x.xx)
+\]
+\[
+rec \quad f = f (rec \quad f)
+\]
+\[
+rec = \lambda y. y (rec \quad y)
+\]
+\[
+loop \equiv rec (?)
+\]
+\[
+loop \equiv (\lambda y. y (rec \quad y))(?)
+\]
+\[
+(\lambda x.xx)(\lambda x.xx) \equiv (\lambda y. y (rec \quad y))(\lambda z.z)
+\]
+\[
+(\lambda x.xx)(\lambda x.xx) \equiv rec (\lambda z.z) =
+\]
+\[
+= (\lambda z.z)(rec (\lambda z.z)) =
+\]
+\[
+= rec (\lambda z.z)
+\]
+
+\begin{gather*}
+AB = C \\
+A = \lambda b. C
+\end{gather*}
+
+\begin{gather*}
+fac (0) = 1\\
+\forall n> 0 \quad fac (n) = n * fac (n-1) \equiv fac (n+1) = (n+1) * fac(n)\\
+\\
+fac(n) = if (n == 0) \ then \ 1 \ else \ n * fac(n-1) \\
+\\
+fac = \lambda m. if (m == 0) \ then \ 1 \ else \ m * fac(m-1) \\
+\\
+F\ f\ n=(\operatorname {IsZero} \ n)\ 1\ (\operatorname {multiply} \ n\ (f\ (\operatorname {pred} \ n)))\\
+fac(n) = F\ f\ n\\
+F\ f = fac\\
+F = \lambda f. fac \\
+F = \lambda f. \lambda m. if (m == 0) \ then \ 1 \ else \ m * f(m-1) \\
+F = \lambda f. \lambda m. \ (\operatorname {IsZero} \ n)\ 1\ (\operatorname {multiply} \ n\ (f\ (\operatorname {pred} \ n)))\\
+\operatorname {IsZero} = \lambda n.(n==0)\\
+\operatorname {multiply} = \lambda ab.(a*b)\\
+\operatorname {pred} = \lambda n.(n-1)\\
+\\
+fac = rec (\lambda f. \lambda m. ?)\\
+\\
+fac = rec\ (\lambda f. \lambda m. \ (\operatorname {IsZero} \ n)\ 1\ (\operatorname {multiply} \ n\ (f\ (\operatorname {pred} \ n))))\\
+\end{gather*}
+
+
+
+\begin{gather*}
+true = K \\
+false = K_* \\
+[M,N] \equiv \lambda z.zMN \\
+[M,N]true = M \\
+(\lambda z.zMN)(\lambda xy.x) = (\lambda xy.x) MN = M \\
+[M,N]false = N
+\\
+\end{gather*}
+
+\begin{gather*}
+P^- \equiv \lambda x.x\ \mathbf{false} = \lambda x.x\ (\lambda ab.b) \\
+`2` = [\mathbf{false}, [\mathbf{false}, I]] = \\
+= \lambda z.(z\ \mathbf{false}\ [\mathbf{false}, I]) = \\
+= \lambda z.(z\ \mathbf{false}\ (\lambda p.(p\ \mathbf{false}\ I))) = \\
+= \lambda z.(z\ (\lambda ab.b)\ (\lambda p.(p\ (\lambda ab.b)\ (\lambda c.c)))) \\ 
+\\
+P^- `2`  = (\lambda x.x\ (\lambda ab.b))\ (\lambda z.(z\ (\lambda ab.b)\ (\lambda p.(p\ (\lambda ab.b)\ (\lambda c.c))))) = \\
+= (\lambda z.(z\ (\lambda ab.b)\ (\lambda p.(p\ (\lambda ab.b)\ (\lambda c.c)))))\ (\lambda xy.y) = \\
+= (\lambda xy.y)\ (\lambda ab.b)\ (\lambda p.(p\ (\lambda ab.b)\ (\lambda c.c))) = \\
+= ((\lambda xy.y)\ (\lambda ab.b))\ (\lambda p.(p\ (\lambda ab.b)\ (\lambda c.c))) = \\
+= \lambda p.(p\ (\lambda ab.b)\ (\lambda c.c)) = \lambda p. p\ \mathbf{false}\ I = [\mathbf{false}, I] = `1`
+\end{gather*}
+
+
+\begin{gather*}
+Add (0, y) = y \\
+\forall x > 0,\ Add(x, y) = S^+ (Add (P^- (x), y)) = 1+ Add (1-x, y)\\
+\mathbf{Add}\ xy = if\ \mathbf{Zero}\ x\ then\ y\ else\ \mathbf{S^+}(\mathbf{Add} (\mathbf{P^-}x)y)) \\
+\mathbf{Add} = \lambda xy.\ if\ \mathbf{Zero}\ x\ then\ y\ else\ \mathbf{S^+}(\mathbf{Add} (\mathbf{P^-}x)y)) \\
+\mathbf{Add} = (\lambda axy.\ if\ \mathbf{Zero}\ x\ then\ y\ else\ \mathbf{S^+}(a (\mathbf{P^-}x)y)))\ \mathbf{Add'} \\
+\mathbf{Add} \equiv \mathbf{Y} (\lambda axy.\ if\ \mathbf{Zero}\ x\ then\ y\ else\ \mathbf{S^+}(a (\mathbf{P^-}x)y))) \\
+\end{gather*}
+
+\clearpage
+\subsection*{https://mvanier.livejournal.com/2897.html}
+
+\begin{verbatim}
+...
+==> ((lambda (n)
+         (if (= n 0)
+             1
+             (* n (factorial0 (- n 1)))))
+       2)
+       
+==> (if (= 2 0)
+        1
+        (* 2 (factorial0 (- 2 1))))
+        
+==> (* 2 (factorial0 1))
+             
+==> (* 2 0) ==> 0
+
+       
+\end{verbatim} 
+
+
+\section*{Exercises Barendregt Chapter 3}
+\subsection*{3.1 i)}
+Find a $\lambda$ term $\mathbf{Mult}$ such that for all $\emph{m, n} \in \mathbb{N}$
+
+\begin{gather*}
+\mathbf{Add} = \lambda xy.\ if\ \mathbf{Zero}\ x\ then\ y\ else\ \mathbf{S^+}(\mathbf{Add} (\mathbf{P^-}x)y)) \\
+\mathbf{Mult}\ `n`\ `m` = `n * m` \\
+One : \mathbb{N}\ \rightarrow \mathbb{B} \\
+\mathbf{One}\ `n` = if\ \mathbf{Zero}\ `n`\ \mathbf{false}\ else\ \mathbf{Zero}(\mathbf{P^-}\ `n`) \\
+\\
+Mult(1, m) = m \\
+\forall n>1,\ Mult(n, m) = Add (m,\ Mult (P^- (n),\ m)) = m + Mult (n-1,\ m) \\
+\mathbf{Mult}\ n\ m = if\ \mathbf{One}\ n\ then\ m\ else\ \mathbf{Add}\ m\ (\mathbf{Mult}\ (\mathbf{P^-} n)\ m)
+\end{gather*}
+
+\subsubsection*{ 3.1 i Scheme}
+\begin{verbatim}
+(define Mult
+  (lambda (n m)
+    (if (= n 1)
+        m
+        (+ m (Mult (- n 1) m))
+    )
+  )
+)
+\end{verbatim}
+
+
+\subsection*{iBis homework Luca}
+
+\begin{gather*}
+Exp (0, m) = 1 \\
+\forall n>0,\ Exp(n, m) = Mult (n,\ (Exp (n,\ (P^- (m))))) = n \cdot Exp (n,\ m - 1) \\
+\mathbf{Exp}\ n\ m = if\ \mathbf{Zero}\ m\ then\ 1\ else\ \mathbf{Mult}\ n\ (\mathbf{Exp}\ n\ (\mathbf{P^-} m))
+\end{gather*}
+
+\begin{verbatim}
+(define Exp
+  (lambda (n m)
+    (if (= m 0)
+        1
+        (Mult n (Exp n (- m 1)))
+    )
+  )
+)
+\end{verbatim}
+
+\subsection*{iTris homework Luca}
+
+\begin{gather*}
+Fact 0 = 1 \\
+Fact\ n  = n * Fact (n-1)
+\\
+Fact\ n = if\ \mathbf{Zero}\ n\ then\ 1\ else\ n * (Fact (n-1))
+\end{gather*}
+
+\begin{verbatim}
+(define Fact
+  (lambda (n)
+    (if (= n 0)
+        1
+        (* n (Fact (- n 1)))
+    )
+  )
+)
+\end{verbatim}
+
+
+
+\begin{gather*}
+Fib\ 0 = 0 \\
+Fib\ 1 = 1 \\
+Fib\ n = Fib (n-1) + Fib (n-2)
+\end{gather*}
+
+\begin{flalign*}
+& Fib\ nm = if\ \mathbf{Zero}\ n\ then\ 0\ & \\ 
+& \hspace{48pt} else\ ( & \\
+& \hspace{78pt} if\ \mathbf{One}\ n\ then\ 1 & \\
+& \hspace{78pt} else\ \mathbf{Add}\ (\mathbf{Fib}\ (\mathbf{P^-} n))\ (\mathbf{Fib}\ (\mathbf{P^-} (\mathbf{P^-} n))) & \\
+& \hspace{74pt} ) &
+\end{flalign*}
+
+
+\begin{verbatim}
+(define Fib
+  (lambda (n)
+    (cond ((= n 0) 0)    
+          ((= n 1) 1)
+          (else (+ (Fib (- n 1)) (Fib (- n 2))))
+    )
+  )
+)
+\end{verbatim}
+
+
+\subsection*{3.2}
+The simple Ackermann function $\varphi$ is defined as follows
+
+\begin{gather*}
+\varphi(0, n) = n + 1 \\
+\varphi(m + 1, 0) = \varphi (m, 1) \\
+\varphi(m + 1, n+1) = \varphi (m, \varphi (m + 1, n)) \\
+\end{gather*}
+ 
+Find a $\Lambda$-term F that $\Lambda$-defines $\varphi$.
+
+\begin{flalign*}
+& \mathbf{Ack}\ mn = if\ \mathbf{Zero}\ m\ then\ \mathbf{S^+} n & \\
+& \hspace{55pt} else\ ( & \\
+& \hspace{86pt} if\ \mathbf{Zero}\ n\ then\ \mathbf{Ack}\ (\mathbf{P^-} m)\ 1 & \\
+& \hspace{86pt} else\ \mathbf{Ack}\ (\mathbf{P^-} m)\ (\mathbf{Ack}\ m\ (\mathbf{P^-} n)) & \\
+& \hspace{80pt} ) &
+\end{flalign*}
+
+\begin{verbatim}
+(define Ack
+  (lambda (m n)
+    (cond ((= m 0) (+ n 1))
+          ((= n 0) (Ack (- m 1) 1))
+          (else (Ack (- m 1) (Ack m (- n 1))))
+    )
+  )
+)
+\end{verbatim}
+
+\subsection*{3.3}
+The $\lambda$-terms \textbf{Cons}, \textbf{Head} and \textbf{Tail} are defined by
+
+\begin{gather*}
+\mathbf{Cons} \equiv \lambda xy. [x,y] \\
+\mathbf{Head} \equiv \lambda x. x \mathbf{K} \\
+\mathbf{Tail} \equiv \lambda x. x \mathbf{K_*}
+\end{gather*}
+
+Find $\lambda$-terms \textbf{nil} and \textbf{Null} such that
+
+\begin{gather*}
+\mathbf{Null}\ \mathbf{nil} = \mathbf{true} \\
+\mathbf{Null} (\mathbf{Cons}\ xy) = \mathbf{false}
+\end{gather*}
+
+Give a representation of lists in $\lambda$-terms and find a $\lambda$-term that defines Append, where Append : Lists x Lists $\rightarrow$ Lists. \\
+\\
+BNF for lists:
+\begin{gather*}
+element\ ::=\ \lambda-term \\
+list\ ::=\ \mathbf{nil}\ |\ [element,\ list] \\
+\mathbf{nil} = (??)
+\end{gather*}
+
+\begin{gather*}
+\mathbf{nil} := \lambda z.\ \mathbf{true} \\
+\mathbf{Null} := \lambda p.p\ (\lambda x. \lambda y. \mathbf{false}) \\
+\mathbf{Null}\ \mathbf{nil} = (\lambda p.p (\lambda x. \lambda y.\ \mathbf{false})) (\lambda z.\ \mathbf{true}) = \\
+= (\lambda z.\ \mathbf{true}) (\lambda x. \lambda y.\ \mathbf{false}) = \\
+= true \\
+\\
+\mathbf{Cons}\ xy = [x,y] = \lambda z.zxy \\
+\mathbf{Null}\ (\mathbf{Cons}\ xy) = (\lambda p.p\ (\lambda x. \lambda y. \mathbf{false}))(\lambda z.zxy) = \\
+= (\lambda z.zxy)(\lambda x. \lambda y. \mathbf{false}) = \\
+= (\lambda x. \lambda y. \mathbf{false}) xy = \\
+= \mathbf{false}
+\end{gather*}
+
+\begin{flalign*}
+& \mathbf{Head} : \mathbf{List} \rightarrow \mathbf{Elem} &\\
+& \mathbf{Tail} : \mathbf{List} \rightarrow \mathbf{List} &\\
+& \mathbf{Cons} : \mathbf{Elem} * \mathbf{List} \rightarrow \mathbf{List} &\\
+& \mathbf{MakeList} : \mathbf{Elem} * \mathbf{Elem} \rightarrow \mathbf{List} &\\
+& \mathbf{MakeList}\ xy = \mathbf{Cons}\ x\ (\mathbf{Cons}\ y\ nil) &\\
+\\
+& \mathbf{Append} : \mathbf{List} * \mathbf{List} \rightarrow \mathbf{List} &\\
+& \mathbf{Append}\ x\ y = if\ \mathbf{Null}\ x\ then\ y\ else\ \mathbf{Cons} (\mathbf{Head}\ (\mathbf{Append}\ (\mathbf{Tail}\ x)\ y)) &
+\end{flalign*}
+
+\begin{verbatim}
+(define list1 '())
+(define list2 '(1 2 3))
+(define list3 '(4 5 6))
+
+(define Head car)
+(define Tail cdr)
+
+(define Append
+  (lambda (x y)
+    (cond ((null? x) y)
+    ((null? y) x)
+    (else (cons (Head x) (Append (Tail x) y)))
+    )
+  )
+)
+\end{verbatim}
+
+\subsubsection*{3.4}
+Construct $\lambda$ $M_0$ $M_1$ ... such that for all $n$ one has
+
+\begin{gather*}
+M_0 = x \\
+M_n+1 = (M_n+2) M_n \\
+\\
+M_n = if\ \mathbf{Zero}\ n\ then\ x\ else\ P^-   
+\end{gather*}
+
+
+\section*{Chapter 4 - Reduction}
+
+\[
+\omega \equiv \lambda x. xx
+\]
+\[
+\Omega \equiv \omega \omega
+\]
+
+\begin{gather*}
+\mathbf{K\ i)}\ \Omega \rightarrow I
+(\lambda xy.x)(\lambda x.x) ((\lambda x.xx)(\lambda x.xx))
+\end{gather*}
+
+\subsection*{4.24 Touring's fixedpoint combinator}
+\begin{gather*}
+A \equiv \lambda xy.y(xxy) \\
+Tcomb = AA = \lambda y.y(AAy)\\
+Tcomb\ F = AAF
+\end{gather*}
+
+\clearpage
+\section*{Exercises chapter 4}
+\subsection*{4.1}
+Show $\forall M\ \exists N\ [N\ in\ \beta -nf\ and\ N \mathbf{i)} \rightarrow _\beta M]$ \\
+\\
+M can be of the form:
+\begin{gather*}
+v \in V \Rightarrow v \in \Lambda \\
+P,Q \in \Lambda \Rightarrow PQ \in \Lambda \\
+P \in \Lambda, x \in V \Rightarrow \lambda x.P \in \Lambda
+\end{gather*}
+
+Therefore:
+\begin{gather*}
+N \mathbf{i)} \rightarrow _\beta v \\
+(\lambda x.xv)\mathbf{i)} \rightarrow v \\
+\\
+N \mathbf{i)} \rightarrow _\beta PQ \\
+(\lambda a.a PQ)\mathbf{i)} \rightarrow PQ \\
+\\
+N \mathbf{i)} \rightarrow _\beta \lambda x.P \\
+(\lambda k.k (\lambda x.P)) \mathbf{i)} \rightarrow \lambda x.P
+\end{gather*}
+
+
+\subsection*{Exercise 4.8 Barendregt}
+Show that the term $M \equiv AAx$ with $A \equiv \lambda axz.z(aax)$ does not have a normal form.
+
+\begin{gather*}
+M = (\lambda axz.z(aax))(\lambda axz.z(aax))x = \\
+= (\lambda xz.z((\lambda axz.z(aax))(\lambda axz.z(aax))x))x = \\
+= \lambda z.z((\lambda axz.z(aax))(\lambda axz.z(aax))x) = \\
+= \lambda z.zM
+\end{gather*}
+
+
+\subsection*{Exercise 4.8 Barendregt}
+\subsubsection*{i)}
+Show that $\mathbf{\lambda} \not \vdash WWW = \mathbf{\omega}_3 \mathbf{\omega}_3$ with $W \equiv \lambda xy.xyy$ and $\mathbf{\omega}_3 \equiv \lambda x.xxx$
+
+\begin{gather*}
+WWW = (\lambda xy.xyy)(\lambda xy.xyy)(\lambda xy.xyy) =\\
+= (\lambda y.(\lambda xy.xyy)yy)(\lambda xy.xyy) = \\
+= (\lambda xy.xyy)(\lambda xy.xyy)(\lambda xy.xyy) \\
+\\
+\mathbf{\omega}_3 \mathbf{\omega}_3 = (\lambda x.xxx)(\lambda x.xxx) = \\
+= (\lambda x.xxx)(\lambda x.xxx)(\lambda x.xxx) = \\
+= (\lambda x.xxx)(\lambda x.xxx)(\lambda x.xxx)(\lambda x.xxx) = \dots \\
+\end{gather*}
+
+\subsubsection*{ii)}
+Show $\mathbf{\lambda} \not \vdash B_x = B_y$ with $B_z \equiv A_z A_z$ and $A_z \equiv \lambda p.ppz$.
+
+\begin{gather*}
+B_z = A_z A_z = (\lambda p.ppz)(\lambda p.ppz) = \\
+= (\lambda p.ppz)(\lambda p.ppz)z = \\
+= ((\lambda p.ppz)(\lambda p.ppz)z)(\lambda p.ppz)z =  \\
+= ((\lambda p.ppz)(\lambda p.ppz)z)(\lambda p.ppz)z =
+\end{gather*}
+
+
+
+\section*{Exercises Chapter 5 - Barendregt}
+\subsection*{Exercise 5.1}
+\subsubsection*{i)}
+
+Give a derivation of: $\vdash \mathbf{SK} : (\alpha \rightarrow \beta) \rightarrow (\alpha \rightarrow \alpha)$
+
+\begin{gather*}
+\mathbf{S}= \lambda xyz. xz (yz) = \\
+\lambda x. \lambda y. \lambda z. xz(yz)\\
+\mathbf{K}= \lambda xy.x : \sigma \rightarrow \tau \rightarrow \sigma
+\end{gather*}
+
+\begin{center}
+\AxiomC{$\vdash x : \xi \rightarrow \mu \rightarrow \kappa$}
+\AxiomC{$\vdash z : \xi$}
+\BIC{$\vdash xz : \mu \rightarrow \kappa$}
+
+\AxiomC{$\vdash y: \xi \rightarrow \mu$}
+\AxiomC{$\vdash z: \xi$}
+\BIC{$\vdash yz: \mu$}
+
+\BIC{$\vdash xz(yz) : \kappa$}
+\AxiomC{$\vdash z : \xi$}
+
+\BIC{$\vdash \lambda z. xz(yz) : \xi \rightarrow \kappa$}
+\AxiomC{$\vdash y : \xi \rightarrow \mu$}
+
+\BIC{$\vdash \lambda y. \lambda z. xz(yz) : (\xi \rightarrow \mu) \rightarrow \xi \rightarrow \kappa$}
+\DP
+\end{center}
+
+\begin{center}
+\AxiomC{$\vdash \lambda y. \lambda z. xz(yz) : (\xi \rightarrow \mu) \rightarrow \xi \rightarrow \kappa$}
+\AxiomC{$\vdash x : \xi \rightarrow \mu \rightarrow \kappa$}
+
+
+\BIC{$\vdash \mathbf{S} \equiv  \lambda x. \lambda y. \lambda z. xz(yz) : (\xi \rightarrow \mu \rightarrow \kappa) \rightarrow (\xi \rightarrow \mu) \rightarrow \xi \rightarrow \kappa$}
+\DP
+\end{center}
+
+\begin{center}
+\AxiomC{$\vdash \mathbf{S} \equiv  \lambda x. \lambda y. \lambda z. xz(yz) : (\xi \rightarrow \mu \rightarrow \kappa) \rightarrow (\xi \rightarrow \mu) \rightarrow \xi \rightarrow \kappa$} \AxiomC{$\vdash \mathbf{K} \equiv \lambda ab.a : \alpha \rightarrow \beta \rightarrow \alpha$} 
+\BIC{$\vdash \mathbf{SK} : (\alpha \rightarrow \beta) \rightarrow (\alpha \rightarrow \alpha)$}
+\DP
+\end{center}
+
+With $\xi \equiv \alpha;\ \mu \equiv \beta;\ \kappa \equiv \alpha$
+
+\begin{gather*}
+\mathbf{SK} \equiv (\lambda x. \lambda y. \lambda z. xz(yz)) (\lambda ab.a) = \\
+= \lambda y. \lambda z. (\lambda ab.a)z(yz) =  \\
+= \lambda y. \lambda z. (\lambda b.z) (yz) =  \\
+= \lambda y. \lambda z.z = \mathbf{false}????? \\
+\end{gather*}
+
+\subsubsection*{ii)}
+Give a derivation of: $\vdash \mathbf{KI} : \beta \rightarrow (\alpha \rightarrow \alpha)$
+
+\begin{gather*}
+\mathbf{K} = \lambda xy.x : \alpha \rightarrow \beta \rightarrow \alpha \\
+\mathbf{I} = \lambda z.z : \gamma \rightarrow \gamma
+\end{gather*}
+
+\begin{center}
+\AxiomC{$\vdash \mathbf{K} = \lambda xy.x : \delta \rightarrow \epsilon \rightarrow \delta $} \AxiomC{$\vdash \mathbf{I} = \lambda z.z : \gamma \rightarrow \gamma$} 
+\BIC{$\vdash \mathbf{KI} : \beta \rightarrow (\alpha \rightarrow \alpha)$}
+\DP
+\end{center}
+
+With $\gamma \equiv \alpha$ and $\epsilon \equiv \beta$
+
+\subsubsection*{iii)}
+Show that $\not \vdash \mathbf{SK} : (\alpha \rightarrow \beta \rightarrow \beta)$
+See derivation exercise i (?)
+
+\subsubsection*{iv)}
+Find a common $\beta$-reduct of $\mathbf{SK}$ and $\mathbf{KI}$. What is the most general type for this term?
+
+
+\begin{gather*}
+\mathbf{SK} \equiv (\lambda xyz. xz(yz)) (\lambda ab.a) = \\
+= \lambda yz. (\lambda ab.a)z(yz) =  \\
+= \lambda yz. (\lambda b.z) (yz) =  \\
+= \lambda yz.z = \mathbf{false}  \\
+\end{gather*}
+
+\begin{gather*}
+\mathbf{KI} \equiv (\lambda ab.a)(\lambda c.c) = \\
+= \lambda bc.c = \mathbf{false} \\
+\end{gather*}
+
+\begin{gather*}
+\mathbf{false} \equiv \lambda xy.y : \alpha \rightarrow \beta \rightarrow \beta \\
+\end{gather*}
+
+\subsection*{Exercise 5.2}
+Show that $\lambda x.xx$ and $\mathbf{KI}(\lambda x.xx)$ have no type in $\lambda \rightarrow$
+
+\begin{center}
+\AxiomC{$x : \gamma \rightarrow \beta$} \AxiomC{$ x: \gamma$}
+\BIC{$xx : \beta$}
+
+\AxiomC{$ x: \alpha$}
+\BIC{$\vdash \lambda x.xx :\ ???$}
+\DP
+\end{center}
+
+$x$ cannot have simultaneously two different type ``forms": $\gamma \rightarrow \beta$ and $\alpha \equiv \gamma$
+
+\begin{gather*}
+\mathbf{KI}(\lambda x.xx) = (\lambda ab.a) (\lambda c.c) (\lambda x.xx) = \\
+= (\lambda b.(\lambda c.c))(\lambda x.xx) = \\
+= \lambda c.c : \gamma \rightarrow \gamma 
+\end{gather*}
+
+
+\subsection*{Exercise 5.3}
+Find the most general types (if they exist) for the following terms.
+
+\subsubsection*{i) $\lambda xy.xyy$}
+
+\begin{center}
+\AxiomC{$x: \delta \rightarrow (\delta \rightarrow \epsilon)$}
+\AxiomC{$y: \delta$}
+\BIC{$xy : \delta \rightarrow \epsilon$}
+
+\AxiomC{$y: \delta$}
+\BIC{$xyy : \epsilon$} 
+
+\AxiomC{$y: \delta$}
+\BIC{$\lambda y.xyy : \delta \rightarrow \epsilon$}
+
+\AxiomC{$ x: \delta \rightarrow (\delta \rightarrow \epsilon)$}
+\BIC{$\vdash \lambda xy.xyy : \delta \rightarrow (\delta \rightarrow \epsilon) \rightarrow (\delta \rightarrow \epsilon)$}
+\DP
+\end{center}
+
+
+\subsubsection*{ii) SII}
+
+\begin{gather*}
+\mathbf{S} \equiv  \lambda x. \lambda y. \lambda z. xz(yz) : (\alpha \rightarrow \beta \rightarrow \gamma) \rightarrow (\alpha \rightarrow \beta) \rightarrow \alpha \rightarrow \gamma \\
+\mathbf{I} \equiv \lambda w.w : \delta \rightarrow \delta
+\end{gather*}
+
+\begin{center}
+\AxiomC{$S : (\zeta \rightarrow \zeta) \rightarrow \epsilon $} 
+
+\AxiomC{$I: \zeta \rightarrow \zeta$}
+\BIC{$\mathbf{SI} : (\delta \rightarrow \delta) \rightarrow \epsilon $}
+
+\AxiomC{$ I: \delta \rightarrow \delta$}
+\BIC{$\vdash \mathbf{SII} : \epsilon$}
+\DP
+\end{center}
+
+
+
+
+
+\subsubsection*{iii) $\lambda xy. y(\lambda z.(yz))$}
+
+
+
+
+
+
+
+
+\end{document}
