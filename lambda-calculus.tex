@@ -1088,19 +1088,82 @@ Find the most general types (if they exist) for the following terms.
 
 \subsubsection*{ii) SII}
 
+\begin{center}
+\AxiomC{$S : \xi \rightarrow (\xi \rightarrow \eta)$} 
+
+\AxiomC{$I: \xi$}
+\BIC{$\mathbf{SI} : \xi \rightarrow \eta $}
+
+\AxiomC{$ I: \xi$}
+\BIC{$\vdash \mathbf{SII} : \eta$}
+\DP
+\end{center}
+
 \begin{gather*}
 \mathbf{S} \equiv  \lambda x. \lambda y. \lambda z. xz(yz) : (\alpha \rightarrow \beta \rightarrow \gamma) \rightarrow (\alpha \rightarrow \beta) \rightarrow \alpha \rightarrow \gamma \\
 \mathbf{I} \equiv \lambda w.w : \delta \rightarrow \delta
 \end{gather*}
 
 \begin{center}
-\AxiomC{$S : (\zeta \rightarrow \zeta) \rightarrow \epsilon $} 
+\AxiomC{$\mathbf{S} : (\alpha \rightarrow \beta \rightarrow \gamma) \rightarrow (\alpha \rightarrow \beta) \rightarrow \alpha \rightarrow \gamma$} 
 
-\AxiomC{$I: \zeta \rightarrow \zeta$}
-\BIC{$\mathbf{SI} : (\delta \rightarrow \delta) \rightarrow \epsilon $}
+\AxiomC{$\mathbf{I}: \delta \rightarrow \delta$}
+\BIC{$\mathbf{SI} : (\beta \rightarrow \gamma) \rightarrow ((\delta \rightarrow \delta) \rightarrow \beta) \rightarrow (\delta \rightarrow \delta) \rightarrow \gamma$}
 
 \AxiomC{$ I: \delta \rightarrow \delta$}
-\BIC{$\vdash \mathbf{SII} : \epsilon$}
+\BIC{$\vdash \mathbf{SII} : \gamma \rightarrow ((\delta \rightarrow \delta) \rightarrow (\delta \rightarrow \delta)) \rightarrow (\delta \rightarrow \delta) \rightarrow \gamma$}
+\DP
+\end{center}
+
+With $\xi \equiv \delta \rightarrow \delta \equiv \beta \equiv \alpha; \\
+\eta \equiv \gamma \rightarrow ((\delta \rightarrow \delta) \rightarrow (\delta \rightarrow \delta)) \rightarrow (\delta \rightarrow \delta) \rightarrow \gamma  \  $
+
+
+\subsubsection*{iii) $\lambda xy.y(\lambda z.z(yz))$}
+
+\subsubsection*{iii bis) $\lambda xy. y(\lambda z.(yz))$}
+\begin{center}
+\AxiomC{$y :\iota \rightarrow \kappa$}
+\AxiomC{$z : \iota$}
+\BIC{$yz : \kappa$} %\theta
+
+\AxiomC{$z : \eta$}
+\BIC{$(\lambda z.(yz)) : \eta \rightarrow \kappa$}
+
+\AxiomC{$y : (\eta \rightarrow \kappa) \rightarrow \epsilon$}
+\BIC{$y(\lambda z.(yz)) : \epsilon$} 
+
+\AxiomC{$y: \gamma$}
+\BIC{$\lambda y.y(\lambda z.(yz)) : \gamma \rightarrow \epsilon$}
+
+\AxiomC{$ x: \alpha $}
+\BIC{$\vdash \lambda xy. y(\lambda z.(yz)) : \alpha \rightarrow (\gamma \rightarrow \epsilon) $}
+\DP
+\end{center}
+
+\subsection*{Exercise 5.4}
+Find terms $M,N \in \lambda$ such that the following hols in $\lambda \rightarrow$.
+\subsubsection*{i) $\vdash M : (\alpha \rightarrow \beta) \rightarrow (\beta \rightarrow \gamma) \rightarrow (\alpha \rightarrow \gamma)$}
+
+
+
+\subsubsection*{iii) $\lambda xy. y(\lambda z.(yz))$}
+\begin{center}
+\AxiomC{$y :\iota \rightarrow \kappa$}
+\AxiomC{$z : \iota$}
+\BIC{$yz : \kappa$} %\theta
+
+\AxiomC{$z : \eta$}
+\BIC{$(\lambda z.(yz)) : \eta \rightarrow \kappa$}
+
+\AxiomC{$y : (\eta \rightarrow \kappa) \rightarrow \epsilon$}
+\BIC{$y(\lambda z.(yz)) : \epsilon$} 
+
+\AxiomC{$y: \gamma$}
+\BIC{$\lambda y.y(\lambda z.(yz)) : \gamma \rightarrow \epsilon$}
+
+\AxiomC{$ x: \alpha $}
+\BIC{$\vdash \lambda xy. y(\lambda z.(yz)) : \alpha \rightarrow (\gamma \rightarrow \epsilon) $}
 \DP
 \end{center}
 
@@ -1108,7 +1171,12 @@ Find the most general types (if they exist) for the following terms.
 
 
 
-\subsubsection*{iii) $\lambda xy. y(\lambda z.(yz))$}
+
+
+
+
+
+
 
 
 
