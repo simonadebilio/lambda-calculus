@@ -1122,26 +1122,36 @@ With $\xi \equiv \delta \rightarrow \delta \equiv \beta \equiv \alpha; \\
 \subsubsection*{iii) $\lambda xy.y(\lambda z.z(yz))$}
 
 \begin{center}
-\AxiomC{$y : \mu \rightarrow \nu$}
-\AxiomC{$z : \mu$}
-\BIC{$yz : \nu $} %iota
+\AxiomC{$y : (\iota \rightarrow \theta) \rightarrow \iota$}
+\AxiomC{$z : \iota \rightarrow \theta$}
+\BIC{$yz : \iota$}
 
-\AxiomC{$z : \nu \rightarrow \kappa$}
-\BIC{$z(yz) : \kappa$} %theta
+\AxiomC{$z : \iota \rightarrow \theta$}
+\BIC{$z(yz) : \theta$}
 
-\AxiomC{$z : \eta$}
-\BIC{$\lambda z.z(yz) : \eta \rightarrow \kappa$} %epsilon
-
-\AxiomC{$y : (\eta \rightarrow \kappa) \rightarrow \zeta $}
-\BIC{$y(\lambda z.z(yz)) : \zeta$} %delta 
-
-\AxiomC{$y: \gamma $}
-\BIC{$\lambda y.y(\lambda z.z(yz)) : \gamma \rightarrow \zeta$} %beta
-
-\AxiomC{$ x: \alpha$}
-\BIC{$\vdash \lambda xy. y(\lambda z.z(yz)): \alpha \rightarrow (\gamma \rightarrow \zeta)$}
+\AxiomC{$z : \iota \rightarrow \theta$}
+\BIC{$\lambda z.z(yz) : (\iota \rightarrow \theta) \rightarrow \theta$}
 \DP
 \end{center}
+
+
+\begin{center}
+\AxiomC{$\lambda z.z(yz) : (\iota \rightarrow \theta) \rightarrow \theta$}
+\AxiomC{$y : ((\iota \rightarrow \theta) \rightarrow \theta) \rightarrow \zeta$}
+\BIC{$y(\lambda z.z(yz)) : \zeta$}
+
+\AxiomC{$y : ((\iota \rightarrow \theta) \rightarrow \theta) \rightarrow \zeta$}
+\BIC{$\lambda y.y(\lambda z.z(yz)) : (((\iota \rightarrow \theta) \rightarrow \theta) \rightarrow \zeta) \rightarrow \zeta$}
+
+\AxiomC{$x : \alpha$}
+\BIC{$\vdash \lambda xy. y(\lambda z.z(yz)) : ???$}
+\DP
+\end{center}
+
+
+With $(\iota \rightarrow \theta) \rightarrow \iota \equiv _? ((\iota \rightarrow \theta) \rightarrow \theta) \rightarrow \zeta$
+
+Because $\iota \not \equiv \iota \rightarrow \theta$
 
 
 \subsubsection*{iii bis) $\lambda xy. y(\lambda z.(yz))$}
@@ -1151,16 +1161,16 @@ With $\xi \equiv \delta \rightarrow \delta \equiv \beta \equiv \alpha; \\
 \BIC{$yz : \kappa$} %\theta
 
 \AxiomC{$z : \eta$}
-\BIC{$(\lambda z.(yz)) : \eta \rightarrow \kappa$}
+\BIC{$\lambda z.yz : \eta \rightarrow \kappa$}
 
 \AxiomC{$y : (\eta \rightarrow \kappa) \rightarrow \epsilon$}
-\BIC{$y(\lambda z.(yz)) : \epsilon$} 
+\BIC{$y\lambda z.yz : \epsilon$} 
 
 \AxiomC{$y: \gamma$}
-\BIC{$\lambda y.y(\lambda z.(yz)) : \gamma \rightarrow \epsilon$}
+\BIC{$\lambda y.y(\lambda z.yz) : \gamma \rightarrow \epsilon$}
 
 \AxiomC{$ x: \alpha $}
-\BIC{$\vdash \lambda xy. y(\lambda z.(yz)) : \alpha \rightarrow (\gamma \rightarrow \epsilon) $}
+\BIC{$\vdash \lambda xy. y(\lambda z.yz) : \alpha \rightarrow (\gamma \rightarrow \epsilon) $}
 \DP
 \end{center}
 
@@ -1168,13 +1178,30 @@ With $\xi \equiv \delta \rightarrow \delta \equiv \beta \equiv \alpha; \\
 Find terms $M,N \in \lambda$ such that the following holds in $\lambda \rightarrow$.
 \subsubsection*{i) $\vdash M : (\alpha \rightarrow \beta) \rightarrow (\beta \rightarrow \gamma) \rightarrow (\alpha \rightarrow \gamma)$}
 
+\begin{center}
+\AxiomC{$c : \gamma$}
+\AxiomC{$z : \alpha$}
+\BIC{$\lambda z.c : \alpha \rightarrow \gamma$}
 
+\AxiomC{$y : \beta \rightarrow \gamma$}
+\BIC{$\lambda yz.c : (\beta \rightarrow \gamma) \rightarrow (\alpha \rightarrow \gamma)$}
 
+\AxiomC{$x : \alpha \rightarrow \beta$}
+\BIC{$M \equiv \lambda xyz.c : (\alpha \rightarrow \beta) \rightarrow (\beta \rightarrow \gamma) \rightarrow (\alpha \rightarrow \gamma)$}
+\DP
+\end{center}
+ 
+\subsubsection*{ii) $\vdash N : (((\alpha \rightarrow \beta) \rightarrow \beta) \rightarrow \beta) \rightarrow (\alpha \rightarrow \beta)$}
 
+\begin{center}
+\AxiomC{$b : \beta$}
+\AxiomC{$y : \alpha$}
+\BIC{$\lambda y.b : \alpha \rightarrow \beta$}
 
-
-
-
+\AxiomC{$x : ((\alpha \rightarrow \beta) \rightarrow \beta) \rightarrow \beta$}
+\BIC{$N \equiv \lambda xy.b : (((\alpha \rightarrow \beta) \rightarrow \beta) \rightarrow \beta) \rightarrow (\alpha \rightarrow \beta)$}
+\DP
+\end{center}
 
 
 
