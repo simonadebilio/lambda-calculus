@@ -1121,6 +1121,29 @@ With $\xi \equiv \delta \rightarrow \delta \equiv \beta \equiv \alpha; \\
 
 \subsubsection*{iii) $\lambda xy.y(\lambda z.z(yz))$}
 
+\begin{center}
+\AxiomC{$y : \mu \rightarrow \nu$}
+\AxiomC{$z : \mu$}
+\BIC{$yz : \nu $} %iota
+
+\AxiomC{$z : \nu \rightarrow \kappa$}
+\BIC{$z(yz) : \kappa$} %theta
+
+\AxiomC{$z : \eta$}
+\BIC{$\lambda z.z(yz) : \eta \rightarrow \kappa$} %epsilon
+
+\AxiomC{$y : (\eta \rightarrow \kappa) \rightarrow \zeta $}
+\BIC{$y(\lambda z.z(yz)) : \zeta$} %delta 
+
+\AxiomC{$y: \gamma $}
+\BIC{$\lambda y.y(\lambda z.z(yz)) : \gamma \rightarrow \zeta$} %beta
+
+\AxiomC{$ x: \alpha$}
+\BIC{$\vdash \lambda xy. y(\lambda z.z(yz)): \alpha \rightarrow (\gamma \rightarrow \zeta)$}
+\DP
+\end{center}
+
+
 \subsubsection*{iii bis) $\lambda xy. y(\lambda z.(yz))$}
 \begin{center}
 \AxiomC{$y :\iota \rightarrow \kappa$}
@@ -1142,30 +1165,9 @@ With $\xi \equiv \delta \rightarrow \delta \equiv \beta \equiv \alpha; \\
 \end{center}
 
 \subsection*{Exercise 5.4}
-Find terms $M,N \in \lambda$ such that the following hols in $\lambda \rightarrow$.
+Find terms $M,N \in \lambda$ such that the following holds in $\lambda \rightarrow$.
 \subsubsection*{i) $\vdash M : (\alpha \rightarrow \beta) \rightarrow (\beta \rightarrow \gamma) \rightarrow (\alpha \rightarrow \gamma)$}
 
-
-
-\subsubsection*{iii) $\lambda xy. y(\lambda z.(yz))$}
-\begin{center}
-\AxiomC{$y :\iota \rightarrow \kappa$}
-\AxiomC{$z : \iota$}
-\BIC{$yz : \kappa$} %\theta
-
-\AxiomC{$z : \eta$}
-\BIC{$(\lambda z.(yz)) : \eta \rightarrow \kappa$}
-
-\AxiomC{$y : (\eta \rightarrow \kappa) \rightarrow \epsilon$}
-\BIC{$y(\lambda z.(yz)) : \epsilon$} 
-
-\AxiomC{$y: \gamma$}
-\BIC{$\lambda y.y(\lambda z.(yz)) : \gamma \rightarrow \epsilon$}
-
-\AxiomC{$ x: \alpha $}
-\BIC{$\vdash \lambda xy. y(\lambda z.(yz)) : \alpha \rightarrow (\gamma \rightarrow \epsilon) $}
-\DP
-\end{center}
 
 
 
