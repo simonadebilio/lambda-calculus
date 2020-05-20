@@ -630,7 +630,7 @@ P^- `2`  = (\lambda x.x\ (\lambda ab.b))\ (\lambda z.(z\ (\lambda ab.b)\ (\lambd
 
 \begin{gather*}
 Add (0, y) = y \\
-\forall x > 0,\ Add(x, y) = S^+ (Add (P^- (x), y)) = 1+ Add (1-x, y)\\
+\forall x > 0,\ Add(x, y) = S^+ (Add (P^- (x), y)) = 1+ Add (x-1, y)\\
 \mathbf{Add}\ xy = if\ \mathbf{Zero}\ x\ then\ y\ else\ \mathbf{S^+}(\mathbf{Add} (\mathbf{P^-}x)y)) \\
 \mathbf{Add} = \lambda xy.\ if\ \mathbf{Zero}\ x\ then\ y\ else\ \mathbf{S^+}(\mathbf{Add} (\mathbf{P^-}x)y)) \\
 \mathbf{Add} = (\lambda axy.\ if\ \mathbf{Zero}\ x\ then\ y\ else\ \mathbf{S^+}(a (\mathbf{P^-}x)y)))\ \mathbf{Add'} \\
@@ -1203,11 +1203,202 @@ Find terms $M,N \in \lambda$ such that the following holds in $\lambda \rightarr
 \DP
 \end{center}
 
+\subsection*{Exercise 5.5}
+Find the types in $\lambda 2$ for the terms in the exercises 5.2 and 5.3
+
+\subsubsection*{$\lambda x.xx$}
+
+\begin{center}
+\AxiomC{$x : \gamma \rightarrow \beta$} \AxiomC{$ x:  $}
+\BIC{$xx : \beta$}
+
+\AxiomC{$ x: \alpha$}
+\BIC{$\vdash \lambda x.xx :\ ???$}
+\DP
+\end{center}
+
+$x$ cannot have simultaneously two different type ``forms": $\gamma \rightarrow \beta$ and $\alpha \equiv \gamma$
+
+\begin{gather*}
+\mathbf{KI}(\lambda x.xx) = (\lambda ab.a) (\lambda c.c) (\lambda x.xx) = \\
+= (\lambda b.(\lambda c.c))(\lambda x.xx) = \\
+= \lambda c.c : \gamma \rightarrow \gamma 
+\end{gather*}
+
+\subsection*{$\lambda$2}
+
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash M : \forall \alpha . \sigma $}
+\UIC{$\Gamma \vdash M \tau : \sigma [\tau/ \alpha]$}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash M : \sigma $}
+\UIC{$\Gamma \vdash \lambda \alpha . M : \forall \alpha . \sigma$}
+\end{prooftree}
+
+\section{Exercises chapter 6 - Barendregt}
+\subsection*{Exercise 6.1}
+Let $k_n$ be defined by $k_0 \equiv I$ and $k_{n+1} \equiv K(k_n)$. Show that on the $k_n$ the recursive functions can be represented by terms in the $\lambda \delta_C\ calculus$\\
+\\
+$k_n \equiv K(k_{n-1})$
+
+\begin{gather*}
+\mathbf{S^+}\ k_n = k_{n + 1} \\
+\mathbf{P^-} k_{n + 1} = k_n \\
+\mathbf{Zero}\ k_0 = \mathbf{true} \\
+\mathbf{Zero}\ k_{n + 1} = \mathbf{false}
+\end{gather*}
+
+\begin{gather*}
+\mathbf{S^+}\ = \lambda x. Kx \\
+\mathbf{P^-} = \lambda x. K_*x \\
+\mathbf{Zero}\ = \lambda n. ((n (\lambda x.K_*)) K) \\
+\mathbf{Zero}\ = \lambda n.((\lambda m. (n K)) K) \\
+\\
+\mathbf{Zero}\ k_0 = \lambda n.((\lambda m. (n K)) K) I = \\
+= (\lambda m. (I K)) K = \\
+= (\lambda m. K) K = \\
+= K \\
+\mathbf{Zero}\ k_1 = \lambda n.((\lambda m. (n K)) K) KI = \\
+= ((\lambda m. (K K)) K)I = \\
+= (\lambda m. (K K)) I = \\
+\\
+\mathbf{Zero}\ = \lambda n.n T \\
+\mathbf{Zero}\ k_0 = (\lambda n.n T) I = \\
+= I T = T \\
+\mathbf{Zero}\ = (\lambda n.n T)KI = \\
+= K T I = T \\
+\end{gather*}
+
+\begin{gather*}
+k_1 = K(k_0) = KI \\
+k_2 = K(k1) = K(KI) \\
+k_3 \equiv K(K(KI)) \\
+k_4 \equiv K(K(K(KI))) \\
+\mathbf{P^-} k_2 = (\lambda x. Kxx) (K(KI)) = \\
+= K(K(KI))(K(KI)) = K(KI)
+\end{gather*}
+
+\begin{verbatim}
+T = Lx.Ly.x 
+F = Lx.Ly.y
+af = Lx.F
+Ln.((n af) T)
+\end{verbatim}
+
+\begin{gather*}
+Zero = \lambda n.n (\lambda x. false) true \\
+Zero\ k_0 = (\lambda n.n (\lambda x. false) true) I = \\
+= I (\lambda x. false) true = \\
+= (\lambda x. false) true = False \\
+\\
+Zero\ k_1 = (\lambda n.n (\lambda x. false)\ true) KI = \\
+= KI (\lambda x. false)\ true = \\
+= I\ true = true \\
+\\
+Zero\ k_1 = (\lambda n.n (\lambda x. false)\ true) KI = \\
+= K((\lambda x. false)\ true) I = \\
+= ((\lambda x. false)\ true) = \\
+= (\lambda x. false)\ true = false \\
+\\
+Zero\ k_2 = (\lambda n.n (\lambda x. false)\ true) (K(KI)) = \\
+= K(KI)(\lambda x. false)\ true = \\
+= KI\ true = \\
+= I \\
+\\
+Zero\ k_3 = (\lambda n.n (\lambda x. false)\ true) (K(K(KI)) = \\
+= K(K(KI)) (\lambda x. false)\ true = \\
+= K(KI) true = \\
+\end{gather*}
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Exercise 6.2}
+Write down a $\lambda \delta-term\ F$ in the system of Example 6.7 such that 
+\begin{center} $Fn \rightarrow n! + n$. \\\end{center}
+
+Factorial: $Fac(n) = if\ (n = 0)\ then\ 1\ else\ (n \times Fac(n-1))$
+
+\clearpage
+
+\begin{verbatim}
+(define Fac
+  (lambda (n)
+     (if (= n 0) 1
+           (* n (Fac (- n 1)))
+     )
+  )
+)
+
+(define F
+  (lambda (n)
+    (+ (Fac n) n)
+  )
+)
+\end{verbatim}
+
+\begin{gather*}
+\mathbf{Fac}\ n = \mathbf{ite}\ (\mathbf{equal}\ \mathbf{0}\ n)\ \mathbf{1}\ (\mathbf{times}\ n\ \mathbf{Fac}(\mathbf{minus}\ n\ \mathbf{1}) \\
+\mathbf{F}n = \mathbf{plus}\ (\mathbf{Fac}\ n)\ n
+\end{gather*}
+
+
+
+
+\section*{Chapter 7 - Barendregt}
+\subsection*{Term rewrite systems (TRSs)}
+\subsubsection*{Add}
+
+\begin{gather*}
+\mathbf{A}(\mathbf{0}, y) \rightarrow y, \\
+\mathbf{A}(\mathbf{S}(x), y) \rightarrow \mathbf{S}(\mathbf{A}(x, y))
+\end{gather*}
+
+\[
+\mathbf{Add} = \lambda xy.\ if\ \mathbf{Zero}\ x\ then\ y\ else\ \mathbf{Succ}(\mathbf{Add}\ (\mathbf{Pred}\ x)y)
+\]
+
+\clearpage
+
+\subsubsection*{Mult}
+
+\begin{gather*}
+\mathbf{M}(\mathbf{0}, y) \rightarrow \mathbf{0}, \\
+\mathbf{M}(x, \mathbf{0}) \rightarrow \mathbf{0}, \\
+\mathbf{M}(\mathbf{S}(\mathbf{0}), y) \rightarrow y, \\ 
+\mathbf{M}(\mathbf{S}(x), y) \rightarrow \mathbf{A}\ (y, (\mathbf{M} (x, y)))
+\end{gather*}
+
+\begin{flalign*}
+& \mathbf{Mult} = \lambda xy. if\ \mathbf{Zero}\ x\ 0\ else\ ( & \\
+& \hspace{80pt} if\ \mathbf{Zero}\ y\ 0\ else\ ( & \\
+& \hspace{95pt} if\ \mathbf{Zero}\ (\mathbf{Pred}\ x)\ then\ y\ else\ \mathbf{Add}\ y\ (\mathbf{Mult} (\mathbf{Pred}\ x)y) & \\
+& \hspace{80pt} ) & \\
+& \hspace{65pt} ) &
+\end{flalign*}
 
 
 
