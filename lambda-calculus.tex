@@ -1400,6 +1400,50 @@ Factorial: $Fac(n) = if\ (n = 0)\ then\ 1\ else\ (n \times Fac(n-1))$
 & \hspace{65pt} ) &
 \end{flalign*}
 
+\subsubsection*{Exp}
+
+\begin{gather*}
+\mathbf{E}(x, \mathbf{0}) \rightarrow \mathbf{S}(0), \\
+\mathbf{E}(\mathbf{0}, y) \rightarrow \mathbf{0}, \\
+\mathbf{E}(\mathbf{S}(0), y) \rightarrow \mathbf{S}(0), \\
+\mathbf{E}(x, \mathbf{S}(y)) \rightarrow \mathbf{M}\ (x, \mathbf{E} (x, y))
+\end{gather*}
+
+\begin{flalign*}
+& \mathbf{Exp} = \lambda xy. if\ \mathbf{Zero}\ y\ then\ 1\ else\ ( & \\
+& \hspace{80pt} if\ \mathbf{Zero}\ x\ then\ 0\ else\ ( & \\
+& \hspace{95pt} if\ \mathbf{Zero}\ (\mathbf{Pred}\ x)\ then\ 1\ else & \\
+& \hspace{110pt} \mathbf{Mult}\ x\ (\mathbf{Exp}\ x\ (\mathbf{Pred}\ y)) & \\
+& \hspace{80pt} ) & \\
+& \hspace{65pt} ) & \\
+\end{flalign*}
+
+\clearpage
+
+\subsubsection*{Exp without overlaps}
+
+\begin{gather*}
+\mathbf{E}(n, \mathbf{0}) \rightarrow \mathbf{S}(0), \\
+\mathbf{E}(\mathbf{0}, \mathbf{S}(n)) \rightarrow \mathbf{0}, \\
+\mathbf{E}(S(m), \mathbf{S}(n)) \rightarrow \mathbf{M}\ (\mathbf{S}(m), \mathbf{E} (\mathbf{S}(m), n))
+\end{gather*}
+
+\begin{flalign*}
+& \mathbf{Exp} = \lambda xy. if\ \mathbf{Zero}\ y\ then\ 1\ else\ ( & \\
+& \hspace{80pt} if\ \mathbf{Zero}\ x\ then\ 0\ else\ & \\
+& \hspace{95pt} \mathbf{Mult}\ x\ (\mathbf{Exp}\ x\ (\mathbf{Pred}\ y)) & \\
+& \hspace{65pt} ) & \\
+\end{flalign*}
+
+
+
+
+
+
+
+
+
+
 
 
 
